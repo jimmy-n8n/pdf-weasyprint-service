@@ -6,32 +6,24 @@ app = Flask(__name__)
 
 @app.route('/convert', methods=['POST'])
 def convert_html_to_pdf():
-    """Convertit HTML en PDF avec WeasyPrint"""
-    
     data = request.get_json()
     html_content = data.get('html', '')
     
     if not html_content:
         return {'error': 'No HTML content provided'}, 400
     
-try:
-        # Générer le PDF avec WeasyPrint
-        from weasyprint import HTML as WeasyHTML
-        html_doc = WeasyHTML(string=html_content)
+    try:
+        html_doc = HTML(string=html_content)
         pdf_bytes = html_doc.write_pdf()
-        
-        # Créer un buffer
         pdf_buffer = io.BytesIO(pdf_bytes)
         pdf_buffer.seek(0)
         
-        # Retourner le PDF
         return send_file(
             pdf_buffer,
             mimetype='application/pdf',
             as_attachment=True,
             download_name='devis.pdf'
         )
-    
     except Exception as e:
         return {'error': str(e)}, 500
 
