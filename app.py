@@ -8,7 +8,6 @@ app = Flask(__name__)
 def convert_html_to_pdf():
     """Convertit HTML en PDF avec WeasyPrint"""
     
-    # Récupérer le HTML depuis la requête
     data = request.get_json()
     html_content = data.get('html', '')
     
@@ -16,19 +15,19 @@ def convert_html_to_pdf():
         return {'error': 'No HTML content provided'}, 400
     
     try:
-        # Générer le PDF avec WeasyPrint
+        # Générer le PDF
         pdf_bytes = HTML(string=html_content).write_pdf()
         
-        # Créer un buffer en mémoire
+        # Créer un buffer
         pdf_buffer = io.BytesIO(pdf_bytes)
         pdf_buffer.seek(0)
         
-        # Retourner le PDF
+        # Retourner le PDF (syntaxe Flask 3.0)
         return send_file(
             pdf_buffer,
             mimetype='application/pdf',
             as_attachment=True,
-attachment_filename='devis.pdf'
+            download_name='devis.pdf'
         )
     
     except Exception as e:
@@ -36,7 +35,6 @@ attachment_filename='devis.pdf'
 
 @app.route('/health', methods=['GET'])
 def health():
-    """Endpoint de santé pour vérifier que le service tourne"""
     return {'status': 'ok'}, 200
 
 if __name__ == '__main__':
