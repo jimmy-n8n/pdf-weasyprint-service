@@ -28,7 +28,7 @@ def convert_html_to_pdf():
             pdf_buffer,
             mimetype='application/pdf',
             as_attachment=True,
-            download_name='devis.pdf'
+attachment_filename='devis.pdf'
         )
     
     except Exception as e:
