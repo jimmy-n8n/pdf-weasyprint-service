@@ -1,5 +1,5 @@
 from flask import Flask, request, send_file
-from weasyprint import HTML
+import weasyprint
 import io
 
 app = Flask(__name__)
@@ -13,7 +13,7 @@ def convert_html_to_pdf():
         return {'error': 'No HTML content provided'}, 400
     
     try:
-        html_doc = HTML(string=html_content)
+        html_doc = weasyprint.HTML(string=html_content)
         pdf_bytes = html_doc.write_pdf()
         pdf_buffer = io.BytesIO(pdf_bytes)
         pdf_buffer.seek(0)
